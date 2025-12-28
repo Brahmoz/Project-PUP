@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{bot_name}} Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --accent-color: #00d2ff;
+      /* Cyan Neon */
+      --accent-secondary: #928dab;
+      --text-main: #ffffff;
+      --text-muted: #b3b3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    /* Header & Hero */
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .settings-btn {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: auto;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .settings-btn:hover {
+      background: var(--accent-color);
+      color: #000;
+    }
+
+    .hero-image {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+      margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .hero-image:hover {
+      transform: scale(1.02);
+    }
+
+    h1 {
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 10px 0;
+      background: linear-gradient(to right, #fff, #928dab);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Glass Cards */
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      color: var(--accent-color);
+      margin-top: 0;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+    }
+
+    /* Sliders */
+    .range-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    input[type="range"] {
+      flex-grow: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--accent-color);
+      transition: transform 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .range-value {
+      font-family: monospace;
+      color: var(--accent-color);
+      min-width: 45px;
+      text-align: right;
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(45deg, var(--accent-color), #3a7bd5);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Chips & Icons */
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .chip:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      background: rgba(0, 210, 255, 0.1);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 8px;
+      color: var(--accent-color);
+      width: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .btn-icon:hover {
+      background: var(--accent-color);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+    }
+
+    /* Grid Layouts */
+    .servo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .presets {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+
+    .presets button {
+      flex: 1;
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: 350px 1fr;
+        /* Sidebar + Main */
+        align-items: start;
+      }
+
+      .header {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        text-align: left;
+      }
+
+      .hero-image {
+        margin: 0;
+        max-width: 120px;
+      }
+
+      /* Desktop Layout Adjustments */
+      .card-identity {
+        grid-column: 1;
+      }
+
+      .card-presets {
+        grid-column: 1;
+      }
+
+      .card-voice {
+        grid-column: 2;
+        grid-row: 2 / 4;
+      }
+
+      .card-sensors {
+        grid-column: 1;
+      }
+
+      .card-touch {
+        grid-column: 1;
+      }
+
+      .card-servos {
+        grid-column: 1 / -1;
+      }
+
+      .save-btn-container {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <a href="/" class="settings-btn">← Dashboard</a>
+      <img src="bot_preview.png" alt="Bot Preview" class="hero-image">
+      <div>
+        <h1>{{bot_name}}</h1>
+        <p style="color: var(--text-muted); margin: 0;">Configuration Mode</p>
+      </div>
+    </div>
+
+    <form method="POST" action="/config" style="display: contents;">
+
+      <!-- Left Column / Sidebar items on Desktop -->
+      <div class="card card-presets">
+        <h2>Quick Modes</h2>
+        <div class="presets">
+          <button type="button" class="btn btn-secondary" onclick="applyPreset('default')">Normal</button>
+          <button type="button" class="btn btn-secondary" onclick="applyPreset('sensitive')">Sentry</button>
+          <button type="button" class="btn btn-secondary" onclick="applyPreset('fast')">Sport</button>
+        </div>
+      </div>
+
+      <div class="card card-identity">
+        <h2>Identity</h2>
+        <div class="form-group">
+          <label>Designation</label>
+          <input type="text" name="bot_name" value="{{bot_name}}">
+        </div>
+      </div>
+
+      <div class="card card-sensors">
+        <h2>Sensors & Motion</h2>
+
+        <div class="form-group">
+          <label>Gait Speed</label>
+          <div class="range-container">
+            <input type="range" min="0" max="100" value="0" id="walk_speed_slider"
+              oninput="updateFromPercent('walk_speed', this.value)">
+            <span id="walk_speed_display" class="range-value">0%</span>
+            <input type="hidden" id="walk_speed" name="walk_speed" value="{{config.get('walk_speed', 0.2)}}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Light Threshold</label>
+          <div class="range-container">
+            <input type="range" min="0" max="100" value="0" id="light_threshold_slider"
+              oninput="updateFromPercent('light_threshold', this.value)">
+            <span id="light_threshold_display" class="range-value">0%</span>
+            <input type="hidden" id="light_threshold" name="light_threshold"
+              value="{{config.get('light_threshold', 40000)}}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Sound Threshold</label>
+          <div class="range-container">
+            <input type="range" min="0" max="100" value="0" id="sound_threshold_slider"
+              oninput="updateFromPercent('sound_threshold', this.value)">
+            <span id="sound_threshold_display" class="range-value">0%</span>
+            <input type="hidden" id="sound_threshold" name="sound_threshold"
+              value="{{config.get('sound_threshold', 10000)}}">
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-touch">
+        <h2>Touch Response</h2>
+        <div class="form-group">
+          <label>Head Sensor</label>
+          <select name="touch_head">
+            <option value="happy_wag" {{ 'selected' if touch.get('head')=='happy_wag' else '' }}>Happy + Wag</option>
+            <option value="bark" {{ 'selected' if touch.get('head')=='bark' else '' }}>Bark</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Body Sensor</label>
+          <select name="touch_body">
+            <option value="excited_dance" {{ 'selected' if touch.get('body')=='excited_dance' else '' }}>Excited + Dance
+            </option>
+            <option value="walk" {{ 'selected' if touch.get('body')=='walk' else '' }}>Walk</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="card card-voice">
+        <h2>Voice Command Matrix</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+          Map TinyML inference labels to specific bot actions. Use the 'Test' button to trigger immediately.
+        </p>
+        {{ voice_html }}
+      </div>
+
+      <div class="card card-servos">
+        <h2>Servo Calibration (0-180°)</h2>
+        {{ servo_html }}
+      </div>
+
+      <div class="save-btn-container" style="text-align: center; margin-top: 20px;">
+        <button type="submit" class="btn" style="max-width: 300px;">Save System Config</button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // --- Voice Command Logic ---
+    function fillInput(text, inputId) {
+      document.getElementById(inputId).value = text;
+    }
+
+    function triggerCommand(inputId) {
+      const cmd = document.getElementById(inputId).value;
+      if (!cmd) return;
+
+      // Visual feedback
+      const btn = document.querySelector(`button[onclick="triggerCommand('${inputId}')"]`);
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+      setTimeout(() => btn.innerHTML = originalHtml, 1000);
+
+      fetch('/trigger', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'command=' + encodeURIComponent(cmd)
+      })
+        .then(res => res.text())
+        .then(msg => console.log("Trigger response:", msg))
+        .catch(err => console.error("Trigger error:", err));
+    }
+
+    // --- Sensor Percentage Logic ---
+    const RANGES = {
+      'walk_speed': { min: 0.1, max: 2.0, reverse: true },
+      'light_threshold': { min: 0, max: 65535, reverse: false },
+      'sound_threshold': { min: 0, max: 30000, reverse: false }
+    };
+
+    function updateFromPercent(key, percent) {
+      const range = RANGES[key];
+      const p = parseInt(percent) / 100;
+      let val;
+
+      if (range.reverse) {
+        val = range.max - (p * (range.max - range.min));
+      } else {
+        val = range.min + (p * (range.max - range.min));
+      }
+
+      if (key === 'walk_speed') val = Math.round(val * 10) / 10;
+      else val = Math.round(val);
+
+      document.getElementById(key).value = val;
+      document.getElementById(key + '_display').innerText = percent + '%';
+    }
+
+    function initSliders() {
+      for (const key in RANGES) {
+        const val = parseFloat(document.getElementById(key).value);
+        const range = RANGES[key];
+        let p;
+
+        if (range.reverse) {
+          p = (range.max - val) / (range.max - range.min);
+        } else {
+          p = (val - range.min) / (range.max - range.min);
+        }
+
+        const percent = Math.round(p * 100);
+        document.getElementById(key + '_slider').value = percent;
+        document.getElementById(key + '_display').innerText = percent + '%';
+      }
+    }
+
+    // --- Servo Logic ---
+    function syncServoInput(source, target) {
+      let targetEl = (typeof target === 'string') ? document.getElementById(target) : target;
+      if (targetEl) targetEl.value = source.value;
+    }
+
+    // --- Presets ---
+    const presets = {
+      'default': { 'walk_speed': 0.2, 'light_threshold': 40000, 'sound_threshold': 10000 },
+      'sensitive': { 'walk_speed': 0.3, 'light_threshold': 20000, 'sound_threshold': 5000 },
+      'fast': { 'walk_speed': 0.1, 'light_threshold': 40000, 'sound_threshold': 10000 }
+    };
+
+    function applyPreset(name) {
+      const data = presets[name];
+      if (!data) return;
+      for (const [key, value] of Object.entries(data)) {
+        const input = document.getElementById(key);
+        if (input) {
+          input.value = value;
+          initSliders();
+        }
+      }
+    }
+
+    initSliders();
+  </script>
+</body>
+
+</html>

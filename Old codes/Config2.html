@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{bot_name}} Config</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(to right, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        section {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, var(--primary), #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            margin-top: 40px;
+        }
+
+        button[type="submit"]:hover {
+            opacity: 0.9;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        /* Grid for smaller inputs */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .background-dog {
+            position: fixed;
+            bottom: 20px;
+            left: -200px;
+            animation: walk-across 45s linear infinite;
+            opacity: 0.1;
+            z-index: -1;
+            white-space: pre;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        @keyframes walk-across {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(calc(100vw + 250px));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-dog">
+        .__.
+        ( . . )
+        /_ _\
+        / . . \
+        (___._.)
+    </div>
+
+    <div class="container">
+        <h1>Configure {{bot_name}}</h1>
+        <form method="POST" action="/config">
+
+            <section>
+                <h2>General Settings</h2>
+                <div class="form-group">
+                    <label>Bot Name</label>
+                    <input name="bot_name" value="{{bot_name}}" placeholder="e.g., RoboDog">
+                </div>
+            </section>
+
+            <section>
+                <h2>Voice Commands</h2>
+                {% for id, name in cmds.items() %}
+                <div class="form-group">
+                    <label>Command {{id}}</label>
+                    <input name="cmd_{{id}}" value="{{name}}">
+                </div>
+                {% endfor %}
+            </section>
+
+            <section>
+                <h2>Touch Reactions</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Head Pat Action</label>
+                        <select name="touch_head">
+                            <option value="happy_wag" {{ 'selected' if touch.get('head')=='happy_wag' else '' }}>Happy +
+                                Wag Tail</option>
+                            <option value="bark" {{ 'selected' if touch.get('head')=='bark' else '' }}>Bark</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Body Rub Action</label>
+                        <select name="touch_body">
+                            <option value="excited_dance" {{ 'selected' if touch.get('body')=='excited_dance' else ''
+                                }}>Excited + Dance</option>
+                            <option value="walk" {{ 'selected' if touch.get('body')=='walk' else '' }}>Walk</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Sensor Thresholds</h2>
+                <div class="form-group">
+                    <label>Walk Speed (seconds per step)</label>
+                    <input name="walk_speed" type="number" step="0.1" value="{{config.get('walk_speed', 0.2)}}">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Light Threshold (0-65535)</label>
+                        <input name="light_threshold" type="number" value="{{config.get('light_threshold', 40000)}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Sound Amplitude Threshold</label>
+                        <input name="sound_threshold" type="number" value="{{config.get('sound_threshold', 10000)}}">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Servo Calibrations (0-180°)</h2>
+                {% for i in range(4) %}
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Servo {{i}} Min</label>
+                        <input name="servo_{{i}}_min" type="number" value="{{calib.get('servo_' ~ i ~ '_min', 0)}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Servo {{i}} Max</label>
+                        <input name="servo_{{i}}_max" type="number" value="{{calib.get('servo_' ~ i ~ '_max', 180)}}">
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+
+            <button type="submit">Save Configuration</button>
+        </form>
+    </div>
+</body>
+
+</html>

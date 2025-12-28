@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{bot_name}} Config</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        section {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Configure {{bot_name}}</h1>
+    <form method="POST" action="/config">
+
+        <section>
+            <h2>Bot Name</h2>
+            <label>Bot Name: <input name="bot_name" value="{{bot_name}}" placeholder="e.g., RoboDog"></label>
+        </section>
+
+        <section>
+            <h2>Voice Commands (Map TinyML Labels to Actions)</h2>
+            <!-- Example: Add more fields as needed -->
+            <label>Command 0 (e.g., sit): <input name="cmd_0" value="{{cmds.get('0', 'sit')}}"></label>
+            <label>Command 1 (e.g., bark): <input name="cmd_1" value="{{cmds.get('1', 'bark')}}"></label>
+            <label>Command 2 (e.g., walk): <input name="cmd_2" value="{{cmds.get('2', 'walk')}}"></label>
+            <!-- Add up to your model's label count -->
+        </section>
+
+        <section>
+            <h2>Touch Reactions</h2>
+            <label>Head Pat Action: <select name="touch_head">
+                    <option value="happy_wag" {{ 'selected' if touch.get('head')=='happy_wag' else '' }}>Happy + Wag
+                        Tail</option>
+                    <option value="bark" {{ 'selected' if touch.get('head')=='bark' else '' }}>Bark</option>
+                    <!-- Add more options -->
+                </select></label>
+            <label>Body Rub Action: <select name="touch_body">
+                    <option value="excited_dance" {{ 'selected' if touch.get('body')=='excited_dance' else '' }}>Excited
+                        + Dance</option>
+                    <option value="walk" {{ 'selected' if touch.get('body')=='walk' else '' }}>Walk</option>
+                </select></label>
+        </section>
+
+        <section>
+            <h2>Configurations</h2>
+            <label>Walk Speed (seconds per step): <input name="walk_speed" type="number" step="0.1"
+                    value="{{config.get('walk_speed', 0.2)}}"></label>
+            <label>Light Threshold (0-65535): <input name="light_threshold" type="number"
+                    value="{{config.get('light_threshold', 40000)}}"></label>
+            <label>Sound Amplitude Threshold: <input name="sound_threshold" type="number"
+                    value="{{config.get('sound_threshold', 10000)}}"></label>
+        </section>
+
+        <section>
+            <h2>Servo Calibrations (Angles 0-180)</h2>
+            <label>Servo 0 Min: <input name="servo_0_min" type="number" value="{{calib.get('servo_0_min', 0)}}"></label>
+            <label>Servo 0 Max: <input name="servo_0_max" type="number"
+                    value="{{calib.get('servo_0_max', 180)}}"></label>
+            <!-- Repeat for Servo 1-3 -->
+            <label>Servo 1 Min: <input name="servo_1_min" type="number" value="{{calib.get('servo_1_min', 0)}}"></label>
+            <label>Servo 1 Max: <input name="servo_1_max" type="number"
+                    value="{{calib.get('servo_1_max', 180)}}"></label>
+            <label>Servo 2 Min: <input name="servo_2_min" type="number" value="{{calib.get('servo_2_min', 0)}}"></label>
+            <label>Servo 2 Max: <input name="servo_2_max" type="number"
+                    value="{{calib.get('servo_2_max', 180)}}"></label>
+            <label>Servo 3 Min: <input name="servo_3_min" type="number" value="{{calib.get('servo_3_min', 0)}}"></label>
+            <label>Servo 3 Max: <input name="servo_3_max" type="number"
+                    value="{{calib.get('servo_3_max', 180)}}"></label>
+        </section>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+
+</html>

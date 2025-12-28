@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{bot_name}} Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --accent-color: #00d2ff;
+      --text-main: #ffffff;
+      --text-muted: #b3b3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .settings-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .settings-btn:hover {
+      background: var(--accent-color);
+      color: #000;
+    }
+
+    .hero-image {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 5px 0;
+      background: linear-gradient(to right, #fff, #928dab);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Live Cards */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--glass-shadow);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card h3 {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+    }
+
+    .live-value {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .unit {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Radar Specific */
+    .radar-card {
+      grid-column: 1 / -1;
+    }
+
+    #radar-status {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #555;
+      padding: 10px 20px;
+      border-radius: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    /* Mic FAB */
+    .fab-mic {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 20px rgba(0, 210, 255, 0.6);
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .fab-mic:hover {
+      transform: scale(1.1);
+    }
+
+    .fab-mic.listening {
+      background: #ff4081;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 64, 129, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 25px rgba(255, 64, 129, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 64, 129, 0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="header">
+      <a href="/config" class="settings-btn">⚙ Settings</a>
+      <img src="bot_preview.png" alt="Bot Preview" class="hero-image">
+      <h1>{{bot_name}}</h1>
+      <p style="color: var(--text-muted); margin: 0;">System Online</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Radar (Full Width) -->
+      <div class="card radar-card">
+        <h3>Radar Sensor</h3>
+        <div id="radar-status">NO MOTION</div>
+      </div>
+
+      <!-- Battery -->
+      <div class="card">
+        <h3>Battery</h3>
+        <div class="live-value"><span id="bat-val">--</span><span class="unit">%</span></div>
+      </div>
+
+      <!-- Light -->
+      <div class="card">
+        <h3>Light</h3>
+        <div class="live-value" id="light-val">--</div>
+      </div>
+
+      <!-- Sound -->
+      <div class="card">
+        <h3>Sound</h3>
+        <div class="live-value" id="sound-val">--</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mic Button -->
+  <button id="mic-btn" class="fab-mic" onclick="toggleVoice()" title="Voice Command">
+    <svg viewBox="0 0 24 24" width="36" height="36">
+      <path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+      <path fill="currentColor"
+        d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+    </svg>
+  </button>
+
+  <script>
+    function fetchStatus() {
+      fetch('/status')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('bat-val').innerText = data.battery;
+          document.getElementById('light-val').innerText = data.light;
+          document.getElementById('sound-val').innerText = data.sound;
+
+          const radarEl = document.getElementById('radar-status');
+          if (data.radar === 1) {
+            radarEl.innerText = "MOTION DETECTED";
+            radarEl.style.background = "rgba(0, 210, 255, 0.2)";
+            radarEl.style.color = "var(--accent-color)";
+            radarEl.style.boxShadow = "0 0 15px var(--accent-color)";
+          } else {
+            radarEl.innerText = "NO MOTION";
+            radarEl.style.background = "rgba(0,0,0,0.3)";
+            radarEl.style.color = "#555";
+            radarEl.style.boxShadow = "none";
+          }
+        })
+        .catch(err => console.error("Poll error:", err));
+    }
+    setInterval(fetchStatus, 2000);
+
+    // Voice Logic
+    let recognition;
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+      recognition.onstart = () => document.getElementById('mic-btn').classList.add('listening');
+      recognition.onend = () => document.getElementById('mic-btn').classList.remove('listening');
+      recognition.onresult = (event) => {
+        const txt = event.results[0][0].transcript.toLowerCase();
+        fetch('/trigger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'command=' + encodeURIComponent(txt)
+        });
+        alert("Sent: " + txt);
+      };
+    } else {
+      document.getElementById('mic-btn').style.display = 'none';
+    }
+
+    function toggleVoice() {
+      if (recognition) recognition.start();
+      else alert("Voice not supported");
+    }
+  </script>
+</body>
+
+</html>
