@@ -13,7 +13,6 @@
       --glass-border: rgba(255, 255, 255, 0.1);
       --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
       --accent-color: #00d2ff;
-      /* Cyan Neon */
       --accent-secondary: #928dab;
       --text-main: #ffffff;
       --text-muted: #b3b3b3;
@@ -127,6 +126,7 @@
     }
 
     input[type="text"],
+    input[type="password"],
     select {
       width: 100%;
       padding: 12px;
@@ -139,6 +139,7 @@
     }
 
     input[type="text"]:focus,
+    input[type="password"]:focus,
     select:focus {
       outline: none;
       border-color: var(--accent-color);
@@ -286,7 +287,6 @@
     @media (min-width: 768px) {
       .container {
         grid-template-columns: 350px 1fr;
-        /* Sidebar + Main */
         align-items: start;
       }
 
@@ -309,13 +309,17 @@
         grid-column: 1;
       }
 
+      .card-wifi {
+        grid-column: 1;
+      }
+
       .card-presets {
         grid-column: 1;
       }
 
       .card-voice {
         grid-column: 2;
-        grid-row: 2 / 4;
+        grid-row: 2 / 5;
       }
 
       .card-sensors {
@@ -368,6 +372,21 @@
           <label>Designation</label>
           <input type="text" name="bot_name" value="{{bot_name}}">
         </div>
+      </div>
+
+      <div class="card card-wifi">
+        <h2>WiFi Network</h2>
+        <div class="form-group">
+          <label>SSID (Network Name)</label>
+          <input type="text" name="wifi_ssid" value="{{wifi.get('ssid', '')}}" placeholder="Your WiFi name">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="wifi_password" value="{{wifi.get('password', '')}}" placeholder="WiFi password">
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 10px 0 0 0;">
+          ⚠️ Save and <strong>restart</strong> the robot to connect to new WiFi
+        </p>
       </div>
 
       <div class="card card-sensors">

@@ -5,15 +5,13 @@ import time
 import ei_model  # Your Edge Impulse model
 from phew import server, render_template, connect_to_wifi, logging
 
-# Wi-Fi Setup (update with your network)
-SSID = "your_wifi_ssid"
-PASSWORD = "your_wifi_password"
-wlan = connect_to_wifi(SSID, PASSWORD)
-logging.info("Connected to Wi-Fi. IP:", wlan.ifconfig()[0])  # Print IP in Thonny
+# Wi-Fi Setup - Will be loaded from config
+# Default values used on first boot only
 
 # Default Config (if no file)
 DEFAULT_CONFIG = {
     "bot_name": "DeskDog",
+    "wifi": {"ssid": "your_wifi_ssid", "password": "your_wifi_password"},
     "cmds": {"0": "sit", "1": "bark", "2": "walk", "3": "search light", "4": "search sound"},
     "touch": {"head": "happy_wag", "body": "excited_dance"},
     "config": {"walk_speed": 0.2, "light_threshold": 40000, "sound_threshold": 10000},
@@ -31,6 +29,12 @@ config = DEFAULT_CONFIG.copy()
 if CONFIG_FILE in os.listdir():
     with open(CONFIG_FILE, "r") as f:
         config.update(json.load(f))
+
+# Connect to WiFi using config
+SSID = config["wifi"]["ssid"]
+PASSWORD = config["wifi"]["password"]
+wlan = connect_to_wifi(SSID, PASSWORD)
+logging.info("Connected to Wi-Fi. IP:", wlan.ifconfig()[0])
 
 # ... (Your existing hardware configs: SERVO_PINS, RGB_PINS, etc.)
 
@@ -155,12 +159,13 @@ def config_page(request):
             </div>"""
         servo_html += "</div>"
 
-        return render_template("config3.html", 
+        return render_template("config.html", 
                                bot_name=config["bot_name"],
                                voice_html=voice_html,
                                servo_html=servo_html,
                                touch=config["touch"],
                                config=config["config"],
+                               wifi=config["wifi"],
                                calib=config["calib"])
     
     if request.method == "POST":
@@ -169,6 +174,10 @@ def config_page(request):
             # Parse and update config dynamically
             new_config = {
                 "bot_name": form.get("bot_name", config["bot_name"]),
+                "wifi": {
+                    "ssid": form.get("wifi_ssid", config["wifi"]["ssid"]),
+                    "password": form.get("wifi_password", config["wifi"]["password"])
+                },
                 "cmds": {
                     k: form.get(f"cmd_{k}", v) for k, v in config["cmds"].items()
                 },
