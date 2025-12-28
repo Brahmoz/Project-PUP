@@ -36,7 +36,16 @@ PASSWORD = config["wifi"]["password"]
 wlan = connect_to_wifi(SSID, PASSWORD)
 logging.info("Connected to Wi-Fi. IP:", wlan.ifconfig()[0])
 
-# ... (Your existing hardware configs: SERVO_PINS, RGB_PINS, etc.)
+# --- Hardware Setup ---
+# Servo Pins (adjust to your wiring)
+SERVO_PINS = [0, 1, 2, 3]  # GP0, GP1, GP2, GP3
+servos = []
+for pin in SERVO_PINS:
+    pwm = PWM(Pin(pin))
+    pwm.freq(50)  # 50Hz for servos
+    servos.append(pwm)
+
+print("Hardware initialized. Servos ready.")
 
 # Helpers (update to use config)
 def servo_angle(idx, angle):
@@ -246,6 +255,11 @@ def not_found(request):
 # Start Server in Background (asyncio)
 import _thread
 _thread.start_new_thread(server.run, ())
+
+# Initialize servos to standing position
+time.sleep(1)  # Wait for server to start
+print("Initializing servos to standing position...")
+stand()
 
 # ... (Your existing bot loop: while True, voice inference, etc.)
 # In inference: Use config["cmds"].get(prediction['label'], 'unknown') to map
