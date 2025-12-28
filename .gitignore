@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+
+# MicroPython
+*.mpy
+
+# Environment & Credentials
+.env
+config.json
+*.secret
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project Specific
+Old codes/
+test/
+*.log
+*.tmp
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
